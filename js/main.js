@@ -9,6 +9,9 @@ jQuery.noConflict();
 	bw(function() {
 		console.log('mwahahaha');
 		
+		/*
+		 * This is my model
+		 */
 		var game = Backbone.Model.extend({
 			defaults: {
 				appid: "Not specified",
@@ -31,25 +34,34 @@ jQuery.noConflict();
 			}
 		});
 		
-		var gamecollection = Backbone.Collection.extend({
-			model: game,
-			initialize : function() {
-				this.on('add',this.newComer,this);
-				this.on('change',this.someChange,this);
+		/*
+		 * This is my model view
+		 */
+		var gameview = Backbone.View.extend({
+			tagName: "div",
+			initialize: function(){
+				this.listenTo(this.model, 'change:player_byte_value', this.render);
+				this.listenTo(this.model, 'destroy', this.remove);
 			},
-			newComer:function(model){
-				console.log('this was added '+model.get('appid'));	
+			render: function() {
+				bw('body').append('fish');
+				//this.$el.html(this.template());
+				//return this;
 			},
-			someChange:function(model){
-				console.log('this was changed '+model.get('appid'));	
+			clear: function(){
+				//the view is listening for the destroy for the model so that it can remove the model.
+				this.model.destroy();
 			}
 		});
-
-		var gamecollection1 = new gamecollection();
-		gamecollection1.add({});
-		gamecollection1.add({});
-		console.log(gamecollection1.at(0));
-		gamecollection1.at(0).set({'appid':'And then some baby'});
-		console.log(gamecollection1); // [game,game]
+		
+		/*
+		 * This is my command line code
+		 */
+		//we make a new modelView and we pass a new model.
+		//We now have a reference to the view and the model through the view
+		var newView = new gameview({model:new game});
+		newView.render();
+		console.log(newView.model.get('appid'));
+		newView.model.set({'appid':'123'});
 	});
 })(jQuery);
