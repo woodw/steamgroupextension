@@ -1,0 +1,9 @@
+.game{
+	clear:both;
+}
+.game div {
+	float:left;
+}
+.player_value_selection{
+	border:1px solid black;
+}

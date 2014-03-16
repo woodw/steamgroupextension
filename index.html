@@ -1,12 +1,22 @@
 <html>
 	<head>
 		<title>Steam Group Extension</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" >
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
 		<script src="js/main.js"></script>
 		<script type="text/template" id="game-item-template">
-			<p><%= appid %></p><p><%= title %></p>
+			<div class="logo"><img src=" http://media.steampowered.com/steamcommunity/public/images/apps/<%= appid %>/<%= img_icon_url %>.jpg"/></div>
+			</div><div class="name"><%= name %></div>
+			<div class="L1 player_value_selection">Local One</div>
+			<div class="L2 player_value_selection">Local Two</div>
+			<div class="L3 player_value_selection">Local Three</div>
+			<div class="L4 player_value_selection">Local Four</div>
+			<div class="O2 player_value_selection">Online Two</div>
+			<div class="O3 player_value_selection">Online Three</div>
+			<div class="O4 player_value_selection">Online Four</div>
+			<div class="OM player_value_selection">Online Massive</div>
 		</script>
 	</head>
 	<body>

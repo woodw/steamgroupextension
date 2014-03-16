@@ -15,7 +15,7 @@ jQuery.noConflict();
 		var game = Backbone.Model.extend({
 			defaults: {
 				appid: 'Not specified: appid',
-				title: 'Not specified: title',
+				title: 'Not specified: name',
 				img_url_logo: 'Not specified: logo',
 				player_byte_value: 00000000,
 				player_values: [
@@ -39,6 +39,7 @@ jQuery.noConflict();
 		 */
 		var gameview = Backbone.View.extend({
 			tagName: 'li',
+			className:'game',
 			_template: _.template(bw('#game-item-template').html()),
 			initialize: function(){
 				console.log('gameview initialize');
@@ -76,6 +77,7 @@ jQuery.noConflict();
 		
 		var gamecollectionview = Backbone.View.extend({
 			tagName: 'ul',
+			className:'game_collection',
 			events: {
         		// only whole collection events (like table sorting)
         		// each child view has it's own events
@@ -83,39 +85,48 @@ jQuery.noConflict();
 			initialize: function(){
 				console.log('collectionview initialize');
 				this._gameModelViews = {'views':[]};
-				_(this).bindAll('add');
-				this.collection.bind('add', this.add);
+				_(this).bindAll('newView','render','newViews');
+				this.collection.bind('add', this.newView);
+				this.collection.bind('reset', this.newViews);
 			},
 			render: function() {
 				console.log('collectionview render');
-				for(var i=0;i<this._gameModelViews.views.length;i++)
+				//for(var i=0;i<this._gameModelViews.views.length;i++)
+				for(var i=0;i<10;i++)
 				{
 					bw(this.el).append(this._gameModelViews.views[i].render);
 				}
 				bw('body').html(bw(this.el));
 			},
-			add: function(m) {
+			newView: function(m) {
 				console.log('collectionview add');
 				var newGameView = new gameview({model:m});
 				this._gameModelViews.views.push(newGameView);
-				bw(this.el).append(newGameView.render);
+				bw(this.el).append(newGameView.render());
+			},
+			newViews: function(ms){
+				console.log('collection add Multiple Views');
+				var newGameView = {};
+				for(var i=0;i<ms.models.length;i++){
+					newGameView = new gameview({model:ms.models[i]});
+					this._gameModelViews.views.push(newGameView);
+					//bw(this.el).append(newGameView.render());
+				}
 			}
 		});
-
+		
 		/*
 		 * Local Variables and entry commands
 		 */
 		var localGameCollectionView = new gamecollectionview({collection:new gamecollection});
-		localGameCollectionView.collection.add(new game({
-				'appid':'123',
-				'title':'Billgame',
-				'logo':'url.123.com'
-		}));
-		localGameCollectionView.render();
-		localGameCollectionView.collection.add(new game({
-				'appid':'456',
-				'title':'Lauriegame',
-				'logo':'url.456.com'
-		}));
+		
+		bw.getJSON('temp/data_dump.json', function(){						
+					}).done(function(response){
+						//event.stopPropagation();
+						console.log( "success" );
+						localGameCollectionView.collection.reset(response.response.games);
+						localGameCollectionView.render();	
+					});
+
 	});
 })(jQuery);
