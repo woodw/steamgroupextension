@@ -7,16 +7,16 @@ jQuery.noConflict();
 (function(bw){				
 	//JQUERY
 	bw(function() {
-		console.log('mwahahaha');
+		console.log('JQuery Ready');
 		
 		/*
 		 * This is my model
 		 */
 		var game = Backbone.Model.extend({
 			defaults: {
-				appid: "Not specified: appid",
-				title: "Not specified: title",
-				img_url_logo: "Not specified: logo",
+				appid: 'Not specified: appid',
+				title: 'Not specified: title',
+				img_url_logo: 'Not specified: logo',
 				player_byte_value: 00000000,
 				player_values: [
 					{'local_one':0},
@@ -30,7 +30,7 @@ jQuery.noConflict();
 				]
 			},
 			initialize: function(){
-				console.log("Down in Fraggle Rock");
+				console.log('game initialize');
 			}
 		});
 		
@@ -38,19 +38,20 @@ jQuery.noConflict();
 		 * This is my model view
 		 */
 		var gameview = Backbone.View.extend({
-			tagName: "div",
+			tagName: 'li',
 			_template: _.template(bw('#game-item-template').html()),
 			initialize: function(){
+				console.log('gameview initialize');
+				_(this).bindAll('render');
 				this.listenTo(this.model, 'change:player_byte_value', this.render);
 				this.listenTo(this.model, 'destroy', this.remove);
 			},
 			render: function() {
-				//bw('body').append(this.bw(el).html(this._template(this.model.toJSON())));
-				bw('body').append(bw(this.el).html(this._template(this.model.toJSON())));
-				//this.$el.html(this.template());
-				//return this;
+				console.log('gameview render');
+				return bw(this.el).html(this._template(this.model.toJSON()));
 			},
 			clear: function(){
+				console.log('gameview clear');
 				//the view is listening for the destroy for the model so that it can remove the model.
 				this.model.destroy();
 			}
@@ -60,39 +61,61 @@ jQuery.noConflict();
 		var gamecollection = Backbone.Collection.extend({
 			model: game,
 			initialize : function() {
+				console.log('gamecollection initialize');
 				this.on('add',this.newComer,this);
 				this.on('change:player_byte_value',this.playerValueChange,this);
 			},
 			newComer:function(model){
-				console.log('this was added '+model.get('appid'));	
+				console.log('gamecollection newcomer');
+				//console.log('this was added '+model.get('appid'));	
 			},
 			playerValueChange:function(model){
-				//I will have the data update the player value from the player value byte
-				//when it is set originally
-				console.log('this was changed '+model.get('appid'));	
+				console.log('gamecollection playervalue');
 			}
 		});
 		
+		var gamecollectionview = Backbone.View.extend({
+			tagName: 'ul',
+			events: {
+        		// only whole collection events (like table sorting)
+        		// each child view has it's own events
+			},
+			initialize: function(){
+				console.log('collectionview initialize');
+				this._gameModelViews = {'views':[]};
+				_(this).bindAll('add');
+				this.collection.bind('add', this.add);
+			},
+			render: function() {
+				console.log('collectionview render');
+				for(var i=0;i<this._gameModelViews.views.length;i++)
+				{
+					bw(this.el).append(this._gameModelViews.views[i].render);
+				}
+				bw('body').html(bw(this.el));
+			},
+			add: function(m) {
+				console.log('collectionview add');
+				var newGameView = new gameview({model:m});
+				this._gameModelViews.views.push(newGameView);
+				bw(this.el).append(newGameView.render);
+			}
+		});
+
 		/*
-		 * This is my command line code
+		 * Local Variables and entry commands
 		 */
-		//we make a new modelView and we pass a new model.
-		//We now have a reference to the view and the model through the view
-		var newView = new gameview({model:new game});
-		newView.render();
-		console.log(newView.model.get('appid'));
-		newView.model.set({'appid':'123'});
-		console.log(newView.model);
-		//im going to make a new collectionview & collection
-		//I instantiate a new collectionview... then in the collectionview init i make a new collection.
-		//once I have the new collection I have a listen from the collectionview for model add
-		//this will give me the chance to make a new model view from the collection view
-		//and then pass that modelview the model that is being added into the collection.
-		//the collectionview will have a ref to the collection and a ref array of model views
-		//the model view will have a ref to the model
-		//the collection will have a ref array to the models
-		//the model will have a ref to nothing.. which is what i want.
-		
-		
+		var localGameCollectionView = new gamecollectionview({collection:new gamecollection});
+		localGameCollectionView.collection.add(new game({
+				'appid':'123',
+				'title':'Billgame',
+				'logo':'url.123.com'
+		}));
+		localGameCollectionView.render();
+		localGameCollectionView.collection.add(new game({
+				'appid':'456',
+				'title':'Lauriegame',
+				'logo':'url.456.com'
+		}));
 	});
 })(jQuery);
