@@ -17,20 +17,32 @@ jQuery.noConflict();
 				appid: 'Not specified: appid',
 				title: 'Not specified: name',
 				img_url_logo: 'Not specified: logo',
-				player_byte_value: 00000000,
+				player_int_value: 9,
 				player_values: [
-					{'local_one':0},
-					{'local_two':0},
-					{'local_three':0},
-					{'local_four':0},
-					{'online_two':0},
-					{'online_three':0},
-					{'online_four':0},
-					{'online_numerous':0}
+					{'type':'L1','value':0},
+					{'type':'L2','value':0},
+					{'type':'L3','value':0},
+					{'type':'L4','value':0},
+					{'type':'O2','value':0},
+					{'type':'O3','value':0},
+					{'type':'O4','value':0},
+					{'type':'OM','value':0}
 				]
 			},
 			initialize: function(){
 				console.log('game initialize');
+				this.on('change:player_values', this.setNewPlayerIntValue, this);
+				//This is how im going be how i set the games selections
+				var tempPlayerIntValue=this.get('player_int_value');
+				for(var i=7;i>=0;i--){
+					if(Math.pow(2,i)<=tempPlayerIntValue){
+						tempPlayerIntValue=tempPlayerIntValue-Math.pow(2,i);
+						this.get('player_values')[i].value = 1;
+					}
+				}
+			},
+			setNewPlayerIntValue:function(){
+				console.log('here');
 			}
 		});
 		
@@ -44,15 +56,21 @@ jQuery.noConflict();
 			initialize: function(){
 				console.log('gameview initialize');
 				_(this).bindAll('render');
-				this.listenTo(this.model, 'change:player_byte_value', this.render);
+				this.listenTo(this.model, 'change:player_int_value', this.render);
+				//this.listenTo(this.model, 'change:player_values', this.render);
 				this.listenTo(this.model, 'destroy', this.remove);
 			},
 			events: {
               // the element IS the link, you don't have to specify its id there
             	'click .player_value_selection': 'updateSelection'
           	},
-          	updateSelection: function(something,fish){
+          	updateSelection: function(something){
+				console.log('gameview update selection');
             	bw(something.currentTarget).toggleClass('selected');
+            	this.model.get('player_values')[(bw(something.currentTarget).index()-1)].value = Math.abs(this.model.get('player_values')[(bw(something.currentTarget).index()-1)].value-1);
+				//by setting my values this was instead of .set i need to trigger the change event on player_value
+				//myModel.trigger("change");
+				//myModel.trigger("change:myArray");
           	},
 			render: function() {
 				console.log('gameview render');
@@ -71,7 +89,7 @@ jQuery.noConflict();
 			initialize : function() {
 				console.log('gamecollection initialize');
 				this.on('add',this.newComer,this);
-				this.on('change:player_byte_value',this.playerValueChange,this);
+				this.on('change:player_int_value',this.playerValueChange,this);
 			},
 			newComer:function(model){
 				console.log('gamecollection newcomer');
@@ -134,6 +152,13 @@ jQuery.noConflict();
 						localGameCollectionView.collection.reset(response.response.games);
 						localGameCollectionView.render();	
 					});
-
+		
+    	//var Number.toString(2)
+		console.log(localGameCollectionView);
+    	//var x = 255;
+	    //alert(x.toString(2));
+	    //this is fine for a string array
+	    //var y = 11111111;
+	    //alert(y.toString(10));	
 	});
 })(jQuery);

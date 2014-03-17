@@ -7,7 +7,7 @@ li.game{
 	clear:both;
 	list-style-type:none;
 	margin-top:10px;
-	height:80px;
+	height:100px;
 	
 }
 img{
@@ -22,8 +22,8 @@ img{
 	border:2px solid rgba(255,255,255,.8);
 	border-radius:15px;
 	text-align: center;
-	-moz-transform: skew(-25deg);
-	-webkit-transform: skew(-25deg);
+	-moz-transform: skew(5deg);
+	-webkit-transform: skew(5deg);
 	margin-right:4px;
 	box-shadow: 10px 10px 5px rgba(0,0,0,.5);
 
@@ -32,8 +32,8 @@ img{
 	border:2px solid rgba(255,255,255,.8);
 	border-radius:15px;
 	padding:10px;
-	-moz-transform: skew(-25deg);
-	-webkit-transform: skew(-25deg);
+	-moz-transform: skew(5deg);
+	-webkit-transform: skew(5deg);
 	margin-top:15px;
 	margin-bottom:4px;
 	margin-left:4px;

@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <html>
 	<head>
 		<title>Steam Group Extension</title>
@@ -10,14 +11,14 @@
 			<div class="logo"><img src=" http://media.steampowered.com/steamcommunity/public/images/apps/<%= appid %>/<%= img_logo_url %>.jpg"/></div>
 			</div>
 			
-			<div class="L1 player_value_selection">L1</div>
-			<div class="L2 player_value_selection">L2</div>
-			<div class="L3 player_value_selection">L3</div>
-			<div class="L4 player_value_selection">L4</div>
-			<div class="O2 player_value_selection">O2</div>
-			<div class="O3 player_value_selection">O3</div>
-			<div class="O4 player_value_selection">O4</div>
-			<div class="OM player_value_selection">OM</div>
+			<div class="L1 player_value_selection <%if(player_values[0].value===1){%>selected<%}%>">L1</div>
+			<div class="L2 player_value_selection <%if(player_values[1].value===1){%>selected<%}%>">L2</div>
+			<div class="L3 player_value_selection <%if(player_values[2].value===1){%>selected<%}%>">L3</div>
+			<div class="L4 player_value_selection <%if(player_values[3].value===1){%>selected<%}%>">L4</div>
+			<div class="O2 player_value_selection <%if(player_values[4].value===1){%>selected<%}%>">O2</div>
+			<div class="O3 player_value_selection <%if(player_values[5].value===1){%>selected<%}%>">O3</div>
+			<div class="O4 player_value_selection <%if(player_values[6].value===1){%>selected<%}%>">O4</div>
+			<div class="OM player_value_selection <%if(player_values[7].value===1){%>selected<%}%>">OM</div>
 		</script>
 	</head>
 	<body>
