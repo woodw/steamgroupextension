@@ -52,7 +52,7 @@ img{
 	background-color:rgba(0,160,200,.5);
 }
 .player_value_selection:not(.selected):hover{
-	background-color:rgba(255,122,0,.5);
+	background-color:rgba(150,80,0,.5);
 }
 .player_value_selection:not(.selected):active{
 	background-color:rgba(255,122,0,1);
@@ -61,7 +61,7 @@ img{
 	background-color:rgba(255,122,0,.5);
 }
 .player_value_selection.selected:hover{
-	background-color:rgba(0,160,200,.5);
+	background-color:rgba(0,80,150,.5);
 }
 .player_value_selection.selected:active{
 	background-color:rgba(0,160,200,1);
