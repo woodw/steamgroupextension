@@ -47,6 +47,13 @@ jQuery.noConflict();
 				this.listenTo(this.model, 'change:player_byte_value', this.render);
 				this.listenTo(this.model, 'destroy', this.remove);
 			},
+			events: {
+              // the element IS the link, you don't have to specify its id there
+            	'click .player_value_selection': 'updateSelection'
+          	},
+          	updateSelection: function(something,fish){
+            	bw(something.currentTarget).toggleClass('selected');
+          	},
 			render: function() {
 				console.log('gameview render');
 				return bw(this.el).html(this._template(this.model.toJSON()));
