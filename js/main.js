@@ -20,7 +20,7 @@ jQuery.noConflict();
 				player_int_value: 0
 			},
 			initialize: function(){
-				//console.log('game initialize');
+				console.log('game initialize');
 				//I have to initialize nested values outside of default. Default is a shared reference object.
 				var tempPlayerIntValue=this.get('player_int_value');
 				var tempBitValues=[];
@@ -51,7 +51,7 @@ jQuery.noConflict();
 				this.on('change:player_values', this.setNewPlayerIntValue, this);
 			},
 			setNewPlayerIntValue:function(){
-				//console.log('here');
+				console.log('here');
 				var temp=0;
 				for(var i=7;i>=0;i--){
 					//console.log('i= '+i);console.log(this.get('player_values')[i].value);
@@ -110,17 +110,23 @@ jQuery.noConflict();
 		//My collection data should keep track of the data alone
 		var gamecollection = Backbone.Collection.extend({
 			model: game,
+			url: '/api/v1/games',
 			initialize : function() {
-				//console.log('gamecollection initialize');
+				console.log('gamecollection initialize');
 				this.on('add',this.newComer,this);
+				this.on('change',this.newChanger,this);
 				this.on('change:player_int_value',this.playerValueChange,this);
 			},
 			newComer:function(model){
-				//console.log('gamecollection newcomer');
+				console.log('gamecollection newcomer');
+				//console.log('this was added '+model.get('appid'));	
+			},
+			newChanger:function(model){
+				console.log('gamecollection newChanger');
 				//console.log('this was added '+model.get('appid'));	
 			},
 			playerValueChange:function(model){
-				//console.log('gamecollection playervalue');
+				console.log('gamecollection playervalue');
 			}
 		});
 		
@@ -136,10 +142,10 @@ jQuery.noConflict();
 				this._gameModelViews = {'views':[]};
 				_(this).bindAll('newView','render','newViews');
 				this.collection.bind('add', this.newView);
-				this.collection.bind('reset', this.newViews);
+				//this.collection.bind('reset', this.newViews);
 			},
 			render: function() {
-				//console.log('collectionview render');
+				console.log('collectionview render');
 				//for(var i=0;i<this._gameModelViews.views.length;i++)
 				for(var i=0;i<10;i++)
 				{
@@ -148,13 +154,14 @@ jQuery.noConflict();
 				bw('body').html(bw(this.el));
 			},
 			newView: function(m) {
-				//console.log('collectionview add');
+				console.log('collectionview add');
+				console.log(m);
 				var newGameView = new gameview({model:m});
 				this._gameModelViews.views.push(newGameView);
 				bw(this.el).append(newGameView.render());
 			},
 			newViews: function(ms){
-				//console.log('collection add Multiple Views');
+				console.log('collection add Multiple Views');
 				var newGameView = {};
 				for(var i=0;i<ms.models.length;i++){
 					newGameView = new gameview({model:ms.models[i]});
@@ -169,13 +176,20 @@ jQuery.noConflict();
 		 */
 		var localGameCollectionView = new gamecollectionview({collection:new gamecollection});
 		
-		bw.getJSON('temp/data_dump.json', function(){						
-					}).done(function(response){
-						//event.stopPropagation();
-						//console.log( "success" );
-						localGameCollectionView.collection.reset(response.response.games);
-						localGameCollectionView.render();	
-					});
+		localGameCollectionView.collection.fetch({reset: true});
+		
+		/*		//bw.getJSON('temp/data_dump.json', function(){						
+		//			}).done(function(response){
+		//				//event.stopPropagation();
+		//				//console.log( "success" );
+		//				
+		//				localGameCollectionView.collection.reset(response.response.games);
+		//				localGameCollectionView.render();	
+		//			});
+		*/
+		
+		//localGameCollectionView.render();
+		
 		
     	//var Number.toString(2)
 		console.log(localGameCollectionView);
